@@ -1,0 +1,54 @@
+腾讯TBS服务 X5内核浏览器 自动播放解决方案
+
+参考链接：http://blog.csdn.net/i_chenjiahui/article/details/50311589
+
+1.集成X5内核，到官方网站下载相应的SDK，记得放so文件
+
+2.html 部分 编写播放的JS代码如：
+
+ <script type="text/javascript">  
+
+    function myFunction()  
+    {  
+        var videos = document.getElementById('vi');   
+        videos.loop = 'loop';  
+        videos.play();     
+    }  
+ </script>  
+
+ <body onload="myFunction();">
+ 	<div  class="item videoItem">
+               <video id="vi" controls preload="metadata" title="Big Buck Bunny"  playsinline x5-video-player-type="h5" x5-video-player-fullscreen="true">
+                  <source src="http://www.jplayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogv" type="video/ogv" />
+                  <source src="http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v" type="video/mp4" />
+               </video>
+               <div class="txt">test</div>
+ 	</div>
+ </body>
+
+在<body> 内 添加onload 属性 参数为调用播放的js方法的方法名，同时声明 playsinline x5-video-player-type="h5" x5-video-player-fullscreen="true" 两个属性
+
+3.Android部分：监听html的加载，在加载完成后调用播放视频的JS代码
+
+ webView.setWebViewClient(new MyWebviewCient());  
+
+ public class MyWebviewCient extends WebViewClient{  
+
+	        @SuppressLint("NewApi")
+			@Override  
+	        public WebResourceResponse shouldInterceptRequest(WebView view,  
+	                String url) {  
+	            WebResourceResponse response = null;  
+	            response = super.shouldInterceptRequest(view, url);  
+	            return response;  
+	        }  
+	  
+	        @Override  
+	        public void onPageFinished(WebView view, String url) {  
+	            super.onPageFinished(view, url);  
+	            Log.d("dream", "***on page finished");  
+	           webView.loadUrl("javascript:myFunction()");   
+	        }  
+	          
+ } 
+
